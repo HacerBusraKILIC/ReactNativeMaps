@@ -51,39 +51,42 @@ export default class App extends React.Component {
       )
 
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        //console.log("Location Permission Granted")
+        console.log("Location Permission Granted")
         //alert("Location Permission Granted");
-        Geolocation.getCurrentPosition(
-          position => {
-            this.setState({
-              region: {
-                latitude: parseFloat(position.coords.latitude),
-                longitude: parseFloat(position.coords.longitude),
-                latitudeDelta: LATITUDE_DELTA,
-                longitudeDelta: LATITUDE_DELTA * ASPECT_RATIO,
-              }
-            });
-          },
-          (error) => Alert.alert('Error', JSON.stringify(error)),
-          { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
-        );
-        this.watchID = Geolocation.watchPosition(
-          position => {
-            this.setState({
-              region: {
-                latitude: parseFloat(position.coords.latitude),
-                longitude: parseFloat(position.coords.longitude),
-                latitudeDelta: LATITUDE_DELTA,
-                longitudeDelta: LATITUDE_DELTA * ASPECT_RATIO,
-              }
-            });
-          }
-        );
-
+        this.getCurrentLocation()
       }
     } catch (err) {
       console.warn(err)
     }
+  }
+
+  getCurrentLocation() {
+    Geolocation.getCurrentPosition(
+      position => {
+        this.setState({
+          region: {
+            latitude: parseFloat(position.coords.latitude),
+            longitude: parseFloat(position.coords.longitude),
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LATITUDE_DELTA * ASPECT_RATIO,
+          }
+        });
+      },
+      (error) => Alert.alert('Error', JSON.stringify(error)),
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+    );
+    this.watchID = Geolocation.watchPosition(
+      position => {
+        this.setState({
+          region: {
+            latitude: parseFloat(position.coords.latitude),
+            longitude: parseFloat(position.coords.longitude),
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LATITUDE_DELTA * ASPECT_RATIO,
+          }
+        });
+      }
+    );
   }
 
   componentWillUnmount() {
